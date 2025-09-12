@@ -39,14 +39,11 @@ export function Footer() {
           {/* Brand section */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="bg-brand rounded-lg p-2">
-                <span className="text-brand-foreground font-bold text-lg font-[family-name:var(--font-poppins)]">
-                  LP
-                </span>
-              </div>
-              <span className="font-bold text-xl text-card-foreground font-[family-name:var(--font-poppins)]">
-                LoversPlay
-              </span>
+              <img
+                src="/loversplay-logo.png"
+                alt="LoversPlay"
+                className="h-8 w-auto hover:scale-105 transition-transform duration-200"
+              />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md font-[family-name:var(--font-inter)]">
               Tu tienda de confianza para el bienestar íntimo. Productos de alta calidad, envío discreto y atención

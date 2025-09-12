@@ -1,21 +1,35 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Tag } from "lucide-react"
-import { useCartStore } from "@/lib/store"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Tag, User } from "lucide-react"
+import { useCartStore, useAuthStore } from "@/lib/store"
 import { mockProducts } from "@/lib/services/mock-data"
 import Link from "next/link"
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, clearCart, getTotalItems, getTotalPrice } = useCartStore()
+  const { user } = useAuthStore()
   const [promoCode, setPromoCode] = useState("")
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null)
+
+  const [showRegistration, setShowRegistration] = useState(false)
+  const [registrationData, setRegistrationData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  })
 
   const cartItems = items
     .map((item) => {
@@ -42,6 +56,24 @@ export default function CartPage() {
     } else {
       alert("Código promocional inválido")
     }
+  }
+
+  const handleRegistration = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (registrationData.password !== registrationData.confirmPassword) {
+      alert("Las contraseñas no coinciden")
+      return
+    }
+
+    if (registrationData.password.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres")
+      return
+    }
+
+    // Mock registration - in real app would call API
+    alert("Registro exitoso! Ahora puedes proceder al checkout")
+    setShowRegistration(false)
   }
 
   const breadcrumbItems = [{ label: "Carrito de Compras" }]
@@ -241,10 +273,108 @@ export default function CartPage() {
                 </div>
               )}
 
+              {!user && !showRegistration && (
+                <div className="mb-6 p-4 bg-muted rounded-lg">
+                  <div className="flex items-center gap-2 mb-3">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                    <p className="font-medium">¿No tienes cuenta?</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Regístrate para un checkout más rápido y seguimiento de pedidos
+                  </p>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => setShowRegistration(true)}>
+                      Registrarse
+                    </Button>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href="/auth">Iniciar Sesión</Link>
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {!user && showRegistration && (
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Crear Cuenta</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleRegistration} className="space-y-4">
+                      <div>
+                        <Label htmlFor="reg-name">Nombre completo *</Label>
+                        <Input
+                          id="reg-name"
+                          value={registrationData.name}
+                          onChange={(e) => setRegistrationData({ ...registrationData, name: e.target.value })}
+                          placeholder="Juan Pérez"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="reg-email">Email *</Label>
+                        <Input
+                          id="reg-email"
+                          type="email"
+                          value={registrationData.email}
+                          onChange={(e) => setRegistrationData({ ...registrationData, email: e.target.value })}
+                          placeholder="juan@email.com"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="reg-phone">Teléfono *</Label>
+                        <Input
+                          id="reg-phone"
+                          type="tel"
+                          value={registrationData.phone}
+                          onChange={(e) => setRegistrationData({ ...registrationData, phone: e.target.value })}
+                          placeholder="+54 11 1234-5678"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="reg-password">Contraseña *</Label>
+                        <Input
+                          id="reg-password"
+                          type="password"
+                          value={registrationData.password}
+                          onChange={(e) => setRegistrationData({ ...registrationData, password: e.target.value })}
+                          placeholder="Mínimo 6 caracteres"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="reg-confirm">Confirmar contraseña *</Label>
+                        <Input
+                          id="reg-confirm"
+                          type="password"
+                          value={registrationData.confirmPassword}
+                          onChange={(e) =>
+                            setRegistrationData({ ...registrationData, confirmPassword: e.target.value })
+                          }
+                          placeholder="Repetir contraseña"
+                          required
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button type="submit" size="sm" className="flex-1">
+                          Registrarse
+                        </Button>
+                        <Button type="button" variant="outline" size="sm" onClick={() => setShowRegistration(false)}>
+                          Cancelar
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Checkout button */}
-              <Button className="w-full bg-brand hover:bg-brand/90 mb-4" size="lg">
-                Proceder al Checkout
-                <ArrowRight className="h-4 w-4 ml-2" />
+              <Button className="w-full bg-brand hover:bg-brand/90 mb-4" size="lg" asChild>
+                <Link href="/pago">
+                  Proceder al Checkout
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
               </Button>
 
               <Button variant="outline" className="w-full bg-transparent" asChild>

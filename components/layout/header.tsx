@@ -2,7 +2,7 @@
 
 import { useState, useCallback, memo } from "react"
 import Link from "next/link"
-import { Search, ShoppingCart, Menu, User, Phone, Mail } from "lucide-react"
+import { Search, ShoppingCart, Menu, User, Phone, Mail, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useCartStore, useAuthStore } from "@/lib/store"
 import { MobileMenu } from "./mobile-menu"
@@ -63,6 +63,17 @@ export function Header() {
                   info@loversplay.com
                 </a>
               </div>
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                <a
+                  href="https://wa.me/5491123456789?text=Hola,%20tengo%20una%20consulta%20sobre%20los%20productos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand transition-colors"
+                >
+                  WhatsApp
+                </a>
+              </div>
             </div>
             <div className="text-xs">Envío discreto y gratuito en compras mayores a $50</div>
           </div>
@@ -86,14 +97,11 @@ export function Header() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="bg-brand rounded-lg p-2 group-hover:scale-105 transition-transform duration-200">
-                <span className="text-brand-foreground font-bold text-lg font-[family-name:var(--font-poppins)]">
-                  LP
-                </span>
-              </div>
-              <span className="hidden sm:block font-bold text-xl text-foreground font-[family-name:var(--font-poppins)] group-hover:text-brand transition-colors duration-200">
-                LoversPlay
-              </span>
+              <img
+                src="/loversplay-logo.png"
+                alt="LoversPlay"
+                className="h-8 w-auto group-hover:scale-105 transition-transform duration-200"
+              />
             </Link>
 
             {/* Desktop navigation */}
@@ -121,6 +129,17 @@ export function Header() {
                 aria-label="Abrir búsqueda"
               >
                 <Search className="h-5 w-5" aria-hidden="true" />
+              </Button>
+
+              <Button variant="ghost" size="sm" className="hover:bg-brand/10 transition-colors" asChild>
+                <a
+                  href="https://wa.me/5491123456789?text=Hola,%20tengo%20una%20consulta%20sobre%20los%20productos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Contactar por WhatsApp"
+                >
+                  <MessageCircle className="h-5 w-5 text-green-600" aria-hidden="true" />
+                </a>
               </Button>
 
               {/* Auth */}

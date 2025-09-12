@@ -30,7 +30,7 @@ export function Hero() {
                   isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
                 }`}
               >
-                <span className="text-primary font-medium text-sm font-[family-name:var(--font-open-sans)] tracking-wide">
+                <span className="text-primary-foreground bg-primary px-3 py-1 rounded-full font-medium text-sm font-[family-name:var(--font-open-sans)] tracking-wide">
                   ✨ Bienestar Premium
                 </span>
               </div>
